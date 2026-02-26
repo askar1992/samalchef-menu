@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Samalchef — Меню 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary:  #7B2D2D;
+    --accent:   #C4855A;
+    --bg:       #FDF6EE;
+    --cream:    #EDE0CC;
+    --text:     #2C1810;
+    --muted:    #9B7B6A;
+  }
+
+  body {
+    font-family: 'Playfair Display', Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 56px 60px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .header {
+    text-align: center;
+    padding-bottom: 36px;
+    margin-bottom: 48px;
+    border-bottom: 1px solid var(--cream);
+    position: relative;
+  }
+  .header::after {
+    content: '◆';
+    position: absolute;
+    bottom: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg);
+    padding: 0 12px;
+    color: var(--accent);
+    font-size: 13px;
+  }
+
+  .logo-wrap { display: flex; justify-content: center; margin-bottom: 16px; }
+
+  .contacts {
+    margin-top: 4px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    flex-wrap: wrap;
+  }
+
+  .section { margin-bottom: 48px; }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-header::before,
+  .section-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--cream);
+  }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--primary);
+    white-space: nowrap;
+    padding: 0 4px;
+  }
+
+  .subcategory-title {
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+    margin: 22px 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--cream);
+  }
+
+  .dish {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 6px 0;
+  }
+
+  .dish-name {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+
+  .dish-dots {
+    flex: 1;
+    border-bottom: 1px dotted var(--muted);
+    margin-bottom: 3px;
+    opacity: 0.35;
+    min-width: 16px;
+  }
+
+  .dish-unit {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .dish-price {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary);
+    white-space: nowrap;
+    min-width: 80px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .note {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--muted);
+    margin-top: 10px;
+    padding-left: 2px;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--cream);
+    position: relative;
+  }
+  .footer::before {
+    content: '◆';
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg);
+    padding: 0 12px;
+    color: var(--accent);
+    font-size: 13px;
+  }
+
+  .bon-appetit {
+    font-size: 26px;
+    font-style: italic;
+    color: var(--primary);
+    letter-spacing: 2px;
+  }
+
+  .footer-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  @media print {
+    body { background: white; padding: 30px 40px; }
+    .header::after, .footer::before { background: white; }
+    .section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-wrap">
+    <svg width="300" height="110" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="55" cy="55" r="48" fill="none" stroke="#7B2D2D" stroke-width="1.4"/>
+      <circle cx="55" cy="55" r="43" fill="none" stroke="#C4855A" stroke-width="0.6"/>
+      <text x="55" y="73" font-family="Playfair Display, Georgia, serif" font-size="52"
+            font-weight="700" fill="#7B2D2D" text-anchor="middle" font-style="italic">SC</text>
+      <text x="118" y="42" font-family="Playfair Display, Georgia, serif" font-size="26"
+            font-weight="600" fill="#7B2D2D" text-anchor="start" letter-spacing="1">Samal</text>
+      <text x="118" y="70" font-family="Playfair Display, Georgia, serif" font-size="26"
+            font-weight="400" fill="#C4855A" text-anchor="start" letter-spacing="1" font-style="italic">chef</text>
+      <line x1="118" y1="78" x2="295" y2="78" stroke="#C4855A" stroke-width="0.7"/>
+      <text x="118" y="91" font-family="Playfair Display, Georgia, serif" font-size="9"
+            font-weight="400" fill="#9B7B6A" text-anchor="start" letter-spacing="4">ДОМАШНЯЯ КУХНЯ</text>
+    </svg>
+  </div>
+  <div class="contacts">
+    <span>@samalchef</span>
+    <span>+7 701 978 94 99</span>
+    <span>samalchef.zh@gmail.com</span>
+  </div>
+</div>
+
+<!-- САЛАТЫ -->
+<div class="section">
+  <div class="section-header"><span class="section-title">Салаты</span></div>
+  <div class="dish"><span class="dish-name">Фунчоза</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">8 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Селёдка под шубой</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">7 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Оливье</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">7 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Французский салат</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">6 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Винегрет</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Цезарь с курицей</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">8 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Цезарь с сёмгой</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">9 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Греческий</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">7 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Цветная капуста с курицей</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">8 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Огуречный салат с говядиной</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">8 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Крабовый</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">7 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Свёкла с черносливом</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">6 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Тёплый салат с телятиной</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">8 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Тёплый салат с кониной</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">9 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Морковь по-корейски</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Салат с баклажанами</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">7 500 ₸</span></div>
+</div>
+
+<!-- ЗАКУСКИ -->
+<div class="section">
+  <div class="section-header"><span class="section-title">Закуски</span></div>
+  <div class="dish"><span class="dish-name">Бауырсаки</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">3 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Самса мясная</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
+  <div class="dish"><span class="dish-name">Самса куриная</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">350 ₸</span></div>
+  <div class="dish"><span class="dish-name">Самса с индейкой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
+  <div class="dish"><span class="dish-name">Самса с брынзой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">300 ₸</span></div>
+  <div class="dish"><span class="dish-name">Чебуреки</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
+  <div class="dish"><span class="dish-name">Беляши</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
+  <div class="dish"><span class="dish-name">Пирожки (печёные / жареные)</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
+  <div class="dish"><span class="dish-name">Блины</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Блины фаршированные</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">650 ₸</span></div>
+  <div class="dish"><span class="dish-name">Блинные рулеты творожные с грибами</span><span class="dish-dots"></span><span class="dish-unit">рулет (4–5 шт.)</span><span class="dish-price">3 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Блинные рулеты с сёмгой</span><span class="dish-dots"></span><span class="dish-unit">рулет (4–5 шт.)</span><span class="dish-price">4 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Куриные наггетсы</span><span class="dish-dots"></span><span class="dish-unit">12 шт.</span><span class="dish-price">3 700 ₸</span></div>
+  <div class="dish"><span class="dish-name">Эклеры с сёмгой и творожным сыром</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">1 200 ₸</span></div>
+</div>
+
+<!-- ОСНОВНЫЕ БЛЮДА -->
+<div class="section">
+  <div class="section-header"><span class="section-title">Основные блюда</span></div>
+
+  <div class="subcategory-title">Пироги</div>
+  <div class="dish"><span class="dish-name">С курицей — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">С курицей — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">10 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">С индейкой — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 300 ₸</span></div>
+  <div class="dish"><span class="dish-name">С индейкой — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">11 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Мясной — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 300 ₸</span></div>
+  <div class="dish"><span class="dish-name">Мясной — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">11 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">С сёмгой — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">10 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">С сёмгой — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Овощной — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">6 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Овощной — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Грибной — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Грибной — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">9 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">С брынзой и шпинатом — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">С брынзой и шпинатом — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">9 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Открытый мексиканский пирог</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">8 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Киш овощной</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">8 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Киш с сёмгой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">12 000 ₸</span></div>
+
+  <div class="subcategory-title">Манты и традиционные блюда</div>
+  <div class="dish"><span class="dish-name">Плов</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">6 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Манты с мясом и тыквой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">350 ₸</span></div>
+  <div class="dish"><span class="dish-name">Манты с мясом и луком</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">380 ₸</span></div>
+  <div class="dish"><span class="dish-name">Манты с кониной</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
+  <div class="dish"><span class="dish-name">Манты с овощами</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">300 ₸</span></div>
+
+  <div class="subcategory-title">Горячие блюда</div>
+  <div class="dish"><span class="dish-name">Мясо по-тайски</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">11 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Сёмга гриль в фольге</span><span class="dish-dots"></span><span class="dish-unit">100 г</span><span class="dish-price">2 100 ₸</span></div>
+  <div class="dish"><span class="dish-name">Форель гриль в фольге</span><span class="dish-dots"></span><span class="dish-unit">100 г</span><span class="dish-price">2 100 ₸</span></div>
+  <div class="dish"><span class="dish-name">Перчики фаршированные</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">6 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Голубцы</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">6 500 ₸</span></div>
+
+  <div class="subcategory-title">Запечённая курица</div>
+  <div class="dish"><span class="dish-name">Целая курица</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Крылья</span><span class="dish-dots"></span><span class="dish-unit">10 шт.</span><span class="dish-price">5 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Ножки</span><span class="dish-dots"></span><span class="dish-unit">10 шт.</span><span class="dish-price">5 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Крылья в азиатском соусе</span><span class="dish-dots"></span><span class="dish-unit">10 шт.</span><span class="dish-price">5 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Ножки в азиатском соусе</span><span class="dish-dots"></span><span class="dish-unit">10 шт.</span><span class="dish-price">6 000 ₸</span></div>
+
+  <div class="subcategory-title">Запечённое мясо</div>
+  <div class="dish"><span class="dish-name">Баранина</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">17 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Индейка</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">17 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Говяжья вырезка</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">17 000 ₸</span></div>
+</div>
+
+<!-- ГАРНИРЫ -->
+<div class="section">
+  <div class="section-header"><span class="section-title">Гарниры</span></div>
+  <div class="dish"><span class="dish-name">Рис</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Гречка</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Запечённый картофель</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Овощи гриль</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">6 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Овощи по-тайски</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">6 000 ₸</span></div>
+</div>
+
+<!-- ДЕСЕРТЫ -->
+<div class="section">
+  <div class="section-header"><span class="section-title">Десерты</span></div>
+
+  <div class="subcategory-title">Выпечка</div>
+  <div class="dish"><span class="dish-name">Эклеры</span><span class="dish-dots"></span><span class="dish-unit">40 шт.</span><span class="dish-price">10 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Творожный пирог</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">8 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Яблочный пирог</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">8 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Лимонный пирог</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">8 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Пирог с курагой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">8 500 ₸</span></div>
+
+  <div class="subcategory-title">Торты</div>
+  <div class="dish"><span class="dish-name">Шоколадник — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">11 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Шоколадник — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Кофейно-шоколадный — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">12 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Кофейно-шоколадный — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Министерский — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">14 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Министерский — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">19 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Муравейник — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">10 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Муравейник — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Медовик — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">10 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Медовик — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Медовик XXXL</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">19 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Наполеон — маленький</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">9 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Наполеон — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">14 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Наполеон — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">20 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Наполеон XXXL</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">28 000 ₸</span></div>
+  <div class="note">* Оформление тортов — по договорённости</div>
+</div>
+
+<!-- ПОЛУФАБРИКАТЫ -->
+<div class="section">
+  <div class="section-header"><span class="section-title">Полуфабрикаты</span></div>
+
+  <div class="subcategory-title">Манты</div>
+  <div class="dish"><span class="dish-name">Мясо с тыквой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">350 ₸</span></div>
+  <div class="dish"><span class="dish-name">Мясо и лук</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">380 ₸</span></div>
+  <div class="dish"><span class="dish-name">Конина</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
+  <div class="dish"><span class="dish-name">Овощи</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">300 ₸</span></div>
+
+  <div class="subcategory-title">Самса</div>
+  <div class="dish"><span class="dish-name">Мясо</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
+  <div class="dish"><span class="dish-name">Курица</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">350 ₸</span></div>
+  <div class="dish"><span class="dish-name">Индейка</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
+  <div class="dish"><span class="dish-name">Брынза</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">300 ₸</span></div>
+
+  <div class="subcategory-title">Пельмени</div>
+  <div class="dish"><span class="dish-name">Говядина</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Баранина</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Конина</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">7 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Курица</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Индейка</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
+
+  <div class="subcategory-title">Вареники</div>
+  <div class="dish"><span class="dish-name">Картофель</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">3 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Творог</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
+
+  <div class="subcategory-title">Котлеты</div>
+  <div class="dish"><span class="dish-name">Говядина</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">800 ₸</span></div>
+  <div class="dish"><span class="dish-name">Баранина</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">800 ₸</span></div>
+  <div class="dish"><span class="dish-name">Конина</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">900 ₸</span></div>
+  <div class="dish"><span class="dish-name">Курица</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">600 ₸</span></div>
+  <div class="dish"><span class="dish-name">Индейка</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">800 ₸</span></div>
+
+  <div class="subcategory-title">Тесто</div>
+  <div class="dish"><span class="dish-name">На баурсаки</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">3 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Слоёное</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Песочное</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Сочни на бешбармак</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
+  <div class="dish"><span class="dish-name">Лапша на лагман</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
+
+  <div class="subcategory-title">Прочее</div>
+  <div class="dish"><span class="dish-name">Рулет с говядиной/бараниной и картофелем/тыквой</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 700 ₸</span></div>
+  <div class="dish"><span class="dish-name">Перчики фаршированные</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
+  <div class="dish"><span class="dish-name">Голубцы</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
+</div>
+
+<div class="footer">
+  <div class="bon-appetit">Приятного аппетита!</div>
+  <div class="footer-note">Принимаем заказы по WhatsApp · +7 701 978 94 99</div>
+</div>
+
+</body>
+</html>
