@@ -110,10 +110,10 @@
   }
 
   .subcategory-title {
-    font-size: 17px;
+    font-size: 18px;
     font-style: italic;
-    font-weight: 600;
-    color: var(--accent);
+    font-weight: 700;
+    color: var(--primary);
     margin: 22px 0 8px;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--cream);
@@ -131,6 +131,16 @@
     font-weight: 600;
     color: var(--text);
     flex-shrink: 0;
+  }
+
+  .dish-desc {
+    display: block;
+    font-size: 14.5px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--muted);
+    letter-spacing: .2px;
+    margin-top: 1px;
   }
 
   .dish-dots {
@@ -348,7 +358,433 @@
     .header::after, .footer::before { background: white; }
     .section { display: block !important; page-break-inside: avoid; }
     .nav { display: none; }
+    .cart-bar, .cart-overlay, .cart-drawer, .qty-ctrl { display: none !important; }
+    .dish.in-cart { background: none; margin: 0; padding: 6px 0; }
+    body.has-cart { padding-bottom: 30px; }
   }
+
+  /* ═══════════ КОРЗИНА ═══════════ */
+
+  /* — контрол количества в строке блюда — */
+  .qty-ctrl {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 3px;
+    flex-shrink: 0;
+    align-self: center;
+    width: 92px;
+    margin-left: 14px;
+  }
+  .qty-btn {
+    width: 29px; height: 29px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    font-family: inherit;
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 0 0 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .18s ease, color .18s ease, border-color .18s ease, transform .12s ease;
+  }
+  .qty-plus {
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: #FFF;
+  }
+  .qty-plus:hover { background: var(--primary); border-color: var(--primary); }
+  .qty-plus:active { transform: scale(.9); }
+  .qty-minus {
+    background: transparent;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+  }
+  .qty-minus:hover { background: var(--accent); color: #FFF; }
+  .qty-minus:active { transform: scale(.9); }
+  .qty-val {
+    width: 26px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .qty-ctrl.empty .qty-val,
+  .qty-ctrl.empty .qty-minus { display: none; }
+
+  .dish.in-cart {
+    background: rgba(196, 133, 90, 0.10);
+    border-radius: 8px;
+    margin: 0 -10px;
+    padding: 6px 10px;
+  }
+
+  /* — зафиксированный футер-бар — */
+  body.has-cart { padding-bottom: 140px; }
+
+  .cart-bar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 60;
+    display: none;
+    background: var(--primary);
+    box-shadow: 0 -4px 24px rgba(44, 24, 16, .30);
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    padding: 0;
+    font-family: inherit;
+  }
+  .cart-bar.show { display: block; }
+  .cart-bar-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 27px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .cart-bar-left {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    color: var(--bg);
+  }
+  .cart-bar-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+  }
+  .cart-bar-count {
+    font-size: 16px;
+    font-style: italic;
+    color: #E8C9A8;
+  }
+  .cart-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--bg);
+  }
+  .cart-bar-sum {
+    font-size: 24px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .cart-bar-arrow {
+    font-size: 15px;
+    color: #E8C9A8;
+    transition: transform .18s ease;
+  }
+  .cart-bar:hover .cart-bar-arrow { transform: translateY(-3px); }
+  .cart-bar.bump { animation: barBump .35s ease; }
+  @keyframes barBump {
+    0%   { transform: translateY(0); }
+    40%  { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
+  }
+
+  /* — затемнение и панель — */
+  .cart-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(44, 24, 16, .5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+    z-index: 70;
+  }
+  .cart-overlay.open { opacity: 1; pointer-events: auto; }
+
+  .cart-drawer {
+    position: fixed;
+    top: 0; right: 0;
+    height: 100%;
+    width: 440px;
+    max-width: 100%;
+    background: var(--bg);
+    z-index: 80;
+    transform: translateX(100%);
+    transition: transform .3s cubic-bezier(.4, 0, .2, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -8px 0 40px rgba(44, 24, 16, .28);
+  }
+  .cart-drawer.open { transform: none; }
+
+  .cart-grip { display: none; }
+
+  .cart-head {
+    padding: 24px 28px 16px;
+    border-bottom: 1px solid var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .cart-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--primary);
+  }
+  .cart-close {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-family: inherit;
+    font-size: 30px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 2px;
+    opacity: .6;
+    transition: opacity .18s ease;
+  }
+  .cart-close:hover { opacity: 1; }
+
+  .cart-body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 6px 28px 18px;
+  }
+
+  .cart-empty {
+    text-align: center;
+    padding: 70px 20px;
+    color: var(--muted);
+    font-style: italic;
+    font-size: 18px;
+  }
+  .cart-empty::before {
+    content: '◆';
+    display: block;
+    color: var(--accent);
+    font-size: 15px;
+    font-style: normal;
+    margin-bottom: 14px;
+  }
+
+  .cart-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--cream);
+  }
+  .cart-item:last-child { border-bottom: none; }
+  .cart-item-main { flex: 1; min-width: 0; }
+  .cart-item-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .cart-item-meta {
+    font-size: 15px;
+    font-style: italic;
+    color: #8A6A55;
+    margin-top: 4px;
+  }
+  .cart-item-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 9px;
+    flex-shrink: 0;
+  }
+  .cart-item-sum {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+    white-space: nowrap;
+  }
+  .cart-item-ctrl {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .cart-item-del {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 21px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 0 0 8px;
+    opacity: .6;
+    transition: opacity .18s ease, color .18s ease;
+  }
+  .cart-item-del:hover { opacity: 1; color: var(--primary); }
+
+  .cart-foot {
+    border-top: 1px solid var(--cream);
+    padding: 18px 28px 24px;
+    flex-shrink: 0;
+    background: var(--bg);
+  }
+  .cart-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .cart-total-label {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .cart-total-sum {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .cart-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .cart-fields input,
+  .cart-fields textarea {
+    width: 100%;
+    border: 1.5px solid var(--cream);
+    border-radius: 9px;
+    background: #FFFCF7;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 17px;
+    color: var(--text);
+    transition: border-color .18s ease;
+  }
+  .cart-fields textarea { resize: vertical; min-height: 46px; }
+  .cart-fields input::placeholder,
+  .cart-fields textarea::placeholder { color: #A98D78; font-style: italic; }
+  .cart-fields input:focus,
+  .cart-fields textarea:focus { outline: none; border-color: var(--accent); }
+  .cart-row2 { display: flex; gap: 10px; }
+  .cart-row2 input { flex: 1; min-width: 0; }
+
+  .btn-send {
+    width: 100%;
+    background: var(--primary);
+    color: var(--bg);
+    border: none;
+    border-radius: 11px;
+    padding: 16px;
+    font-family: inherit;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: .3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+    transition: background .18s ease;
+  }
+  .btn-send:hover { background: #6A2626; }
+  .btn-send svg { flex-shrink: 0; }
+
+  .btn-clear {
+    width: 100%;
+    margin-top: 10px;
+    background: none;
+    border: none;
+    color: #8A6A55;
+    font-family: inherit;
+    font-size: 16px;
+    font-style: italic;
+    cursor: pointer;
+    padding: 9px;
+    transition: color .18s ease;
+  }
+  .btn-clear:hover { color: var(--primary); }
+
+  .cart-hint {
+    font-size: 14px;
+    font-style: italic;
+    color: #8A6A55;
+    text-align: center;
+    margin-top: 11px;
+    line-height: 1.5;
+  }
+
+  /* ═══ СЕНСОРНЫЕ ЭКРАНЫ: шторка снизу, крупная типографика ═══ */
+  @media (hover: none) and (pointer: coarse) {
+
+    .qty-btn { width: 40px; height: 40px; font-size: 26px; }
+    .qty-minus { border-width: 2px; }
+    .qty-val { width: 34px; font-size: 24px; }
+    .qty-ctrl { width: 126px; gap: 5px; margin-left: 16px; }
+
+    body.has-cart { padding-bottom: 185px; }
+
+    .cart-bar-inner { padding: 34px 40px; }
+    .cart-bar-title { font-size: 22px; letter-spacing: 4px; }
+    .cart-bar-count { font-size: 21px; }
+    .cart-bar-sum { font-size: 32px; }
+    .cart-bar-arrow { font-size: 20px; }
+
+    .cart-drawer {
+      top: auto; bottom: 0; left: 0; right: 0;
+      width: 100%;
+      height: auto;
+      max-height: 90vh;
+      border-radius: 26px 26px 0 0;
+      transform: translateY(100%);
+      box-shadow: 0 -8px 40px rgba(44, 24, 16, .35);
+    }
+    .cart-drawer.open { transform: none; }
+
+    .cart-grip {
+      display: block;
+      width: 60px; height: 5px;
+      border-radius: 3px;
+      background: var(--cream);
+      margin: 12px auto 0;
+      flex-shrink: 0;
+    }
+
+    .cart-head { padding: 18px 34px 16px; }
+    .cart-title { font-size: 22px; letter-spacing: 4px; }
+    .cart-close { font-size: 42px; }
+
+    .cart-body { padding: 8px 34px 18px; }
+    .cart-empty { font-size: 24px; padding: 50px 20px; }
+
+    .cart-item { padding: 20px 0; gap: 16px; }
+    .cart-item-name { font-size: 25px; }
+    .cart-item-meta { font-size: 20px; margin-top: 6px; }
+    .cart-item-sum { font-size: 25px; }
+    .cart-item-right { gap: 12px; }
+    .cart-item-del { font-size: 30px; padding-left: 12px; }
+
+    .cart-foot { padding: 18px 34px 28px; }
+    .cart-total-label { font-size: 19px; }
+    .cart-total-sum { font-size: 40px; }
+
+    .cart-fields { gap: 12px; margin-bottom: 18px; }
+    .cart-fields input,
+    .cart-fields textarea { font-size: 23px; padding: 15px 17px; border-radius: 11px; }
+    .cart-fields textarea { min-height: 62px; }
+
+    .btn-send { font-size: 26px; padding: 20px; border-radius: 14px; gap: 13px; }
+    .btn-send svg { width: 27px; height: 27px; }
+    .btn-clear { font-size: 21px; padding: 13px; }
+    .cart-hint { font-size: 18px; margin-top: 14px; }
+  }
+
 </style>
 </head>
 <body>
@@ -449,20 +885,20 @@
   <div class="section-header"><span class="section-title">Основные блюда</span></div>
 
   <div class="subcategory-title">Пироги</div>
-  <div class="dish"><span class="dish-name">С курицей — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">С курицей — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">10 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">С индейкой — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 300 ₸</span></div>
-  <div class="dish"><span class="dish-name">С индейкой — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">11 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Мясной — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 300 ₸</span></div>
-  <div class="dish"><span class="dish-name">Мясной — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">11 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">С сёмгой — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">10 500 ₸</span></div>
-  <div class="dish"><span class="dish-name">С сёмгой — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Овощной — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">6 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Овощной — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 500 ₸</span></div>
-  <div class="dish"><span class="dish-name">Грибной — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 500 ₸</span></div>
-  <div class="dish"><span class="dish-name">Грибной — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">9 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">С брынзой и шпинатом — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 500 ₸</span></div>
-  <div class="dish"><span class="dish-name">С брынзой и шпинатом — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">9 000 ₸</span></div>
+  <div class="dish" data-cart="Пирог с курицей, средний"><span class="dish-name">С курицей — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 000 ₸</span></div>
+  <div class="dish" data-cart="Пирог с курицей, большой"><span class="dish-name">С курицей — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">10 000 ₸</span></div>
+  <div class="dish" data-cart="Пирог с индейкой, средний"><span class="dish-name">С индейкой — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 300 ₸</span></div>
+  <div class="dish" data-cart="Пирог с индейкой, большой"><span class="dish-name">С индейкой — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">11 000 ₸</span></div>
+  <div class="dish" data-cart="Пирог мясной, средний"><span class="dish-name">Мясной — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 300 ₸</span></div>
+  <div class="dish" data-cart="Пирог мясной, большой"><span class="dish-name">Мясной — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">11 000 ₸</span></div>
+  <div class="dish" data-cart="Пирог с сёмгой, средний"><span class="dish-name">С сёмгой — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">10 500 ₸</span></div>
+  <div class="dish" data-cart="Пирог с сёмгой, большой"><span class="dish-name">С сёмгой — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
+  <div class="dish" data-cart="Пирог овощной, средний"><span class="dish-name">Овощной — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">6 000 ₸</span></div>
+  <div class="dish" data-cart="Пирог овощной, большой"><span class="dish-name">Овощной — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 500 ₸</span></div>
+  <div class="dish" data-cart="Пирог грибной, средний"><span class="dish-name">Грибной — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 500 ₸</span></div>
+  <div class="dish" data-cart="Пирог грибной, большой"><span class="dish-name">Грибной — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">9 000 ₸</span></div>
+  <div class="dish" data-cart="Пирог с брынзой и шпинатом, средний"><span class="dish-name">С брынзой и шпинатом — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 500 ₸</span></div>
+  <div class="dish" data-cart="Пирог с брынзой и шпинатом, большой"><span class="dish-name">С брынзой и шпинатом — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">9 000 ₸</span></div>
   <div class="dish"><span class="dish-name">Открытый мексиканский пирог</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">8 000 ₸</span></div>
   <div class="dish"><span class="dish-name">Киш овощной</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">8 000 ₸</span></div>
   <div class="dish"><span class="dish-name">Киш с сёмгой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">12 000 ₸</span></div>
@@ -482,16 +918,16 @@
   <div class="dish"><span class="dish-name">Голубцы</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">6 500 ₸</span></div>
 
   <div class="subcategory-title">Запечённая курица</div>
-  <div class="dish"><span class="dish-name">Целая курица</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Крылья</span><span class="dish-dots"></span><span class="dish-unit">10 шт.</span><span class="dish-price">5 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Ножки</span><span class="dish-dots"></span><span class="dish-unit">10 шт.</span><span class="dish-price">5 500 ₸</span></div>
-  <div class="dish"><span class="dish-name">Крылья в азиатском соусе</span><span class="dish-dots"></span><span class="dish-unit">10 шт.</span><span class="dish-price">5 500 ₸</span></div>
-  <div class="dish"><span class="dish-name">Ножки в азиатском соусе</span><span class="dish-dots"></span><span class="dish-unit">10 шт.</span><span class="dish-price">6 000 ₸</span></div>
+  <div class="dish" data-cart="Курица запечённая целиком"><span class="dish-name">Целая курица</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">7 000 ₸</span></div>
+  <div class="dish" data-cart="Куриные крылья запечённые"><span class="dish-name">Крылья</span><span class="dish-dots"></span><span class="dish-unit">10 шт.</span><span class="dish-price">5 000 ₸</span></div>
+  <div class="dish" data-cart="Куриные ножки запечённые"><span class="dish-name">Ножки</span><span class="dish-dots"></span><span class="dish-unit">10 шт.</span><span class="dish-price">5 500 ₸</span></div>
+  <div class="dish" data-cart="Куриные крылья в азиатском соусе"><span class="dish-name">Крылья в азиатском соусе</span><span class="dish-dots"></span><span class="dish-unit">10 шт.</span><span class="dish-price">5 500 ₸</span></div>
+  <div class="dish" data-cart="Куриные ножки в азиатском соусе"><span class="dish-name">Ножки в азиатском соусе</span><span class="dish-dots"></span><span class="dish-unit">10 шт.</span><span class="dish-price">6 000 ₸</span></div>
 
   <div class="subcategory-title">Запечённое мясо</div>
-  <div class="dish"><span class="dish-name">Баранина</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">17 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Индейка</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">17 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Говяжья вырезка</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">17 000 ₸</span></div>
+  <div class="dish" data-cart="Баранина запечённая"><span class="dish-name">Баранина</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">17 000 ₸</span></div>
+  <div class="dish" data-cart="Индейка запечённая"><span class="dish-name">Индейка</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">17 000 ₸</span></div>
+  <div class="dish" data-cart="Говяжья вырезка запечённая"><span class="dish-name">Говяжья вырезка</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">17 000 ₸</span></div>
 </div>
 
 <!-- ГАРНИРЫ -->
@@ -511,28 +947,28 @@
   <div class="section-header"><span class="section-title">Десерты</span></div>
 
   <div class="subcategory-title">Выпечка</div>
-  <div class="dish"><span class="dish-name">Эклеры</span><span class="dish-dots"></span><span class="dish-unit">40 шт.</span><span class="dish-price">10 000 ₸</span></div>
+  <div class="dish" data-cart="Эклеры сладкие"><span class="dish-name">Эклеры</span><span class="dish-dots"></span><span class="dish-unit">40 шт.</span><span class="dish-price">10 000 ₸</span></div>
   <div class="dish"><span class="dish-name">Творожный пирог</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">8 500 ₸</span></div>
   <div class="dish"><span class="dish-name">Яблочный пирог</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">8 000 ₸</span></div>
   <div class="dish"><span class="dish-name">Лимонный пирог</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">8 500 ₸</span></div>
   <div class="dish"><span class="dish-name">Пирог с курагой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">8 500 ₸</span></div>
 
   <div class="subcategory-title">Торты</div>
-  <div class="dish"><span class="dish-name">Шоколадник — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">11 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Шоколадник — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Кофейно-шоколадный — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">12 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Кофейно-шоколадный — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Министерский — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">14 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Министерский — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">19 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Муравейник — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">10 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Муравейник — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Медовик — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">10 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Медовик — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Медовик XXXL</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">19 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Наполеон — маленький</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">9 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Наполеон — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">14 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Наполеон — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">20 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Наполеон XXXL</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">28 000 ₸</span></div>
+  <div class="dish" data-cart="Торт Шоколадник, средний"><span class="dish-name">Шоколадник — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">11 000 ₸</span></div>
+  <div class="dish" data-cart="Торт Шоколадник, большой"><span class="dish-name">Шоколадник — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
+  <div class="dish" data-cart="Торт кофейно-шоколадный, средний"><span class="dish-name">Кофейно-шоколадный — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">12 000 ₸</span></div>
+  <div class="dish" data-cart="Торт кофейно-шоколадный, большой"><span class="dish-name">Кофейно-шоколадный — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
+  <div class="dish" data-cart="Торт Министерский, средний"><span class="dish-name">Министерский — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">14 000 ₸</span></div>
+  <div class="dish" data-cart="Торт Министерский, большой"><span class="dish-name">Министерский — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">19 000 ₸</span></div>
+  <div class="dish" data-cart="Торт Муравейник, средний"><span class="dish-name">Муравейник — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">10 000 ₸</span></div>
+  <div class="dish" data-cart="Торт Муравейник, большой"><span class="dish-name">Муравейник — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
+  <div class="dish" data-cart="Торт Медовик, средний"><span class="dish-name">Медовик — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">10 000 ₸</span></div>
+  <div class="dish" data-cart="Торт Медовик, большой"><span class="dish-name">Медовик — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">15 000 ₸</span></div>
+  <div class="dish" data-cart="Торт Медовик XXXL"><span class="dish-name">Медовик XXXL</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">19 000 ₸</span></div>
+  <div class="dish" data-cart="Торт Наполеон, маленький"><span class="dish-name">Наполеон — маленький</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">9 000 ₸</span></div>
+  <div class="dish" data-cart="Торт Наполеон, средний"><span class="dish-name">Наполеон — средний</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">14 000 ₸</span></div>
+  <div class="dish" data-cart="Торт Наполеон, большой"><span class="dish-name">Наполеон — большой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">20 000 ₸</span></div>
+  <div class="dish" data-cart="Торт Наполеон XXXL"><span class="dish-name">Наполеон XXXL</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">28 000 ₸</span></div>
   <div class="note">* Оформление тортов — по договорённости</div>
 </div>
 
@@ -542,46 +978,46 @@
   <div class="section-header"><span class="section-title">Полуфабрикаты</span></div>
 
   <div class="subcategory-title">Манты</div>
-  <div class="dish"><span class="dish-name">Мясо с тыквой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">350 ₸</span></div>
-  <div class="dish"><span class="dish-name">Мясо и лук</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">380 ₸</span></div>
-  <div class="dish"><span class="dish-name">Конина</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
-  <div class="dish"><span class="dish-name">Овощи</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">300 ₸</span></div>
+  <div class="dish" data-cart="Манты с мясом и тыквой (полуфабрикат)"><span class="dish-name">Мясо с тыквой</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">350 ₸</span></div>
+  <div class="dish" data-cart="Манты с мясом и луком (полуфабрикат)"><span class="dish-name">Мясо и лук</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">380 ₸</span></div>
+  <div class="dish" data-cart="Манты с кониной (полуфабрикат)"><span class="dish-name">Конина</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
+  <div class="dish" data-cart="Манты с овощами (полуфабрикат)"><span class="dish-name">Овощи</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">300 ₸</span></div>
 
   <div class="subcategory-title">Самса</div>
-  <div class="dish"><span class="dish-name">Мясо</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
-  <div class="dish"><span class="dish-name">Курица</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">350 ₸</span></div>
-  <div class="dish"><span class="dish-name">Индейка</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
-  <div class="dish"><span class="dish-name">Брынза</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">300 ₸</span></div>
+  <div class="dish" data-cart="Самса мясная (полуфабрикат)"><span class="dish-name">Мясо</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
+  <div class="dish" data-cart="Самса куриная (полуфабрикат)"><span class="dish-name">Курица</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">350 ₸</span></div>
+  <div class="dish" data-cart="Самса с индейкой (полуфабрикат)"><span class="dish-name">Индейка</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">400 ₸</span></div>
+  <div class="dish" data-cart="Самса с брынзой (полуфабрикат)"><span class="dish-name">Брынза</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">300 ₸</span></div>
 
   <div class="subcategory-title">Пельмени</div>
-  <div class="dish"><span class="dish-name">Говядина</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
-  <div class="dish"><span class="dish-name">Баранина</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
-  <div class="dish"><span class="dish-name">Конина</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">7 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Курица</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 500 ₸</span></div>
-  <div class="dish"><span class="dish-name">Индейка</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
+  <div class="dish" data-cart="Пельмени с говядиной (полуфабрикат)"><span class="dish-name">Говядина</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
+  <div class="dish" data-cart="Пельмени с бараниной (полуфабрикат)"><span class="dish-name">Баранина</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
+  <div class="dish" data-cart="Пельмени с кониной (полуфабрикат)"><span class="dish-name">Конина</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">7 000 ₸</span></div>
+  <div class="dish" data-cart="Пельмени с курицей (полуфабрикат)"><span class="dish-name">Курица</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 500 ₸</span></div>
+  <div class="dish" data-cart="Пельмени с индейкой (полуфабрикат)"><span class="dish-name">Индейка</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
 
   <div class="subcategory-title">Вареники</div>
-  <div class="dish"><span class="dish-name">Картофель</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">3 500 ₸</span></div>
-  <div class="dish"><span class="dish-name">Творог</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
+  <div class="dish" data-cart="Вареники с картофелем (полуфабрикат)"><span class="dish-name">Картофель</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">3 500 ₸</span></div>
+  <div class="dish" data-cart="Вареники с творогом (полуфабрикат)"><span class="dish-name">Творог</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
 
   <div class="subcategory-title">Котлеты</div>
-  <div class="dish"><span class="dish-name">Говядина</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">800 ₸</span></div>
-  <div class="dish"><span class="dish-name">Баранина</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">800 ₸</span></div>
-  <div class="dish"><span class="dish-name">Конина</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">900 ₸</span></div>
-  <div class="dish"><span class="dish-name">Курица</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">600 ₸</span></div>
-  <div class="dish"><span class="dish-name">Индейка</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">800 ₸</span></div>
+  <div class="dish" data-cart="Котлеты из говядины (полуфабрикат)"><span class="dish-name">Говядина</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">800 ₸</span></div>
+  <div class="dish" data-cart="Котлеты из баранины (полуфабрикат)"><span class="dish-name">Баранина</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">800 ₸</span></div>
+  <div class="dish" data-cart="Котлеты из конины (полуфабрикат)"><span class="dish-name">Конина</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">900 ₸</span></div>
+  <div class="dish" data-cart="Котлеты из курицы (полуфабрикат)"><span class="dish-name">Курица</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">600 ₸</span></div>
+  <div class="dish" data-cart="Котлеты из индейки (полуфабрикат)"><span class="dish-name">Индейка</span><span class="dish-dots"></span><span class="dish-unit">1 шт.</span><span class="dish-price">800 ₸</span></div>
 
   <div class="subcategory-title">Тесто</div>
-  <div class="dish"><span class="dish-name">На баурсаки</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">3 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Слоёное</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
-  <div class="dish"><span class="dish-name">Песочное</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
+  <div class="dish" data-cart="Тесто на баурсаки"><span class="dish-name">На баурсаки</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">3 000 ₸</span></div>
+  <div class="dish" data-cart="Тесто слоёное"><span class="dish-name">Слоёное</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
+  <div class="dish" data-cart="Тесто песочное"><span class="dish-name">Песочное</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
   <div class="dish"><span class="dish-name">Сочни на бешбармак</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
   <div class="dish"><span class="dish-name">Лапша на лагман</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 000 ₸</span></div>
 
   <div class="subcategory-title">Прочее</div>
   <div class="dish"><span class="dish-name">Рулет с говядиной/бараниной и картофелем/тыквой</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">4 700 ₸</span></div>
-  <div class="dish"><span class="dish-name">Перчики фаршированные</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
-  <div class="dish"><span class="dish-name">Голубцы</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
+  <div class="dish" data-cart="Перчики фаршированные (полуфабрикат)"><span class="dish-name">Перчики фаршированные</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
+  <div class="dish" data-cart="Голубцы (полуфабрикат)"><span class="dish-name">Голубцы</span><span class="dish-dots"></span><span class="dish-unit">1 кг</span><span class="dish-price">5 500 ₸</span></div>
 </div>
 
 <!-- ПОЛЕЗНЫЕ КОТЛЕТКИ -->
@@ -591,11 +1027,11 @@
   <div style="text-align:center; margin-bottom: 20px;">
     <span class="badge-gluten">Без муки · Без манки · Без глютена · Без углеводов</span>
   </div>
-  <div class="dish"><span class="dish-name">Говядина, лук пассерованный, картофель</span><span class="dish-dots"></span><span class="dish-unit">6 шт. по 80 г</span><span class="dish-price">6 600 ₸</span></div>
-  <div class="dish"><span class="dish-name">Индейка, лук пассерованный, кабачок</span><span class="dish-dots"></span><span class="dish-unit">6 шт. по 80 г</span><span class="dish-price">6 600 ₸</span></div>
-  <div class="dish"><span class="dish-name">Курица (белое мясо), лук пассерованный, морковь</span><span class="dish-dots"></span><span class="dish-unit">6 шт. по 80 г</span><span class="dish-price">5 700 ₸</span></div>
-  <div class="dish"><span class="dish-name">Говядина, лук пассерованный, гречка припущенная</span><span class="dish-dots"></span><span class="dish-unit">6 шт. по 80 г</span><span class="dish-price">6 600 ₸</span></div>
-  <div class="dish"><span class="dish-name">Конина, лук пассерованный, кабачок</span><span class="dish-dots"></span><span class="dish-unit">6 шт. по 80 г</span><span class="dish-price">7 200 ₸</span></div>
+  <div class="dish" data-cart="Полезные котлетки (говядина/картофель)"><span class="dish-name">Говядина<span class="dish-desc">лук пассерованный, картофель</span></span><span class="dish-dots"></span><span class="dish-unit">6 шт. по 80 г</span><span class="dish-price">6 600 ₸</span></div>
+  <div class="dish" data-cart="Полезные котлетки (индейка)"><span class="dish-name">Индейка<span class="dish-desc">лук пассерованный, кабачок</span></span><span class="dish-dots"></span><span class="dish-unit">6 шт. по 80 г</span><span class="dish-price">6 600 ₸</span></div>
+  <div class="dish" data-cart="Полезные котлетки (курица)"><span class="dish-name">Курица<span class="dish-desc">белое мясо, лук пассерованный, морковь</span></span><span class="dish-dots"></span><span class="dish-unit">6 шт. по 80 г</span><span class="dish-price">5 700 ₸</span></div>
+  <div class="dish" data-cart="Полезные котлетки (говядина/гречка)"><span class="dish-name">Говядина<span class="dish-desc">лук пассерованный, гречка припущенная</span></span><span class="dish-dots"></span><span class="dish-unit">6 шт. по 80 г</span><span class="dish-price">6 600 ₸</span></div>
+  <div class="dish" data-cart="Полезные котлетки (конина)"><span class="dish-name">Конина<span class="dish-desc">лук пассерованный, кабачок</span></span><span class="dish-dots"></span><span class="dish-unit">6 шт. по 80 г</span><span class="dish-price">7 200 ₸</span></div>
 </div>
 
 <div class="footer">
@@ -610,6 +1046,327 @@
     document.getElementById(id).classList.add('visible');
     btn.classList.add('active');
   }
+</script>
+
+
+<!-- ═══════════ КОРЗИНА ═══════════ -->
+<button class="cart-bar" id="cartBar" onclick="Cart.open()">
+  <span class="cart-bar-inner">
+    <span class="cart-bar-left">
+      <span class="cart-bar-title">Корзина</span>
+      <span class="cart-bar-count" id="barCount"></span>
+    </span>
+    <span class="cart-bar-right">
+      <span class="cart-bar-sum" id="barSum">0 ₸</span>
+      <span class="cart-bar-arrow">▲</span>
+    </span>
+  </span>
+</button>
+
+<div class="cart-overlay" id="cartOverlay" onclick="Cart.close()"></div>
+
+<aside class="cart-drawer" id="cartDrawer">
+  <div class="cart-grip"></div>
+
+  <div class="cart-head">
+    <span class="cart-title">Ваш заказ</span>
+    <button class="cart-close" onclick="Cart.close()" title="Закрыть">×</button>
+  </div>
+
+  <div class="cart-body" id="cartBody"></div>
+
+  <div class="cart-foot" id="cartFoot">
+    <div class="cart-total">
+      <span class="cart-total-label">Итого</span>
+      <span class="cart-total-sum" id="cartTotal">0 ₸</span>
+    </div>
+
+    <div class="cart-fields">
+      <input type="text" id="fName" placeholder="Ваше имя" autocomplete="name">
+      <div class="cart-row2">
+        <input type="tel" id="fPhone" placeholder="Телефон" autocomplete="tel">
+        <input type="date" id="fDate" title="Дата заказа">
+      </div>
+      <textarea id="fNote" rows="1" placeholder="Комментарий к заказу"></textarea>
+    </div>
+
+    <button class="btn-send" onclick="Cart.send()">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35zM12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2z"/></svg>
+      Отправить в WhatsApp
+    </button>
+    <button class="btn-clear" onclick="Cart.clear()">Очистить корзину</button>
+    <div class="cart-hint">Заказ откроется готовым сообщением в WhatsApp — останется нажать «Отправить»</div>
+  </div>
+</aside>
+
+<script>
+var Cart = (function () {
+  var PHONE = '77019789499';
+  var KEY   = 'samalchef_cart_v1';
+
+  var items = {};   // id -> { name, desc, unit, price, section, sub, el, ctrl }
+  var cart  = {};   // id -> qty
+
+  function fmt(n) { return n.toLocaleString('ru-RU') + ' ₸'; }
+
+  function plural(n) {
+    var n10 = n % 10, n100 = n % 100;
+    if (n10 === 1 && n100 !== 11) return n + ' позиция';
+    if (n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) return n + ' позиции';
+    return n + ' позиций';
+  }
+
+  function slug(s) {
+    return s.toLowerCase()
+      .replace(/ё/g, 'е')
+      .replace(/[^a-zа-я0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
+  }
+
+  function parsePrice(t) {
+    var d = t.replace(/[^\d]/g, '');
+    return d ? parseInt(d, 10) : 0;
+  }
+
+  /* ── сбор позиций из готовой разметки меню ── */
+  function collect() {
+    document.querySelectorAll('.section').forEach(function (sec) {
+      var secTitle = sec.querySelector('.section-title');
+      var secName  = secTitle ? secTitle.textContent.trim() : '';
+      var sub = '';
+
+      Array.prototype.forEach.call(sec.children, function (node) {
+        if (node.classList.contains('subcategory-title')) {
+          sub = node.textContent.trim();
+          return;
+        }
+        if (!node.classList.contains('dish')) return;
+
+        var nameEl  = node.querySelector('.dish-name');
+        var unitEl  = node.querySelector('.dish-unit');
+        var priceEl = node.querySelector('.dish-price');
+        if (!nameEl || !priceEl) return;
+
+        var descEl = nameEl.querySelector('.dish-desc');
+        var desc   = descEl ? descEl.textContent.trim() : '';
+        var name   = '';
+        Array.prototype.forEach.call(nameEl.childNodes, function (n) {
+          if (n.nodeType === 3) name += n.textContent;
+        });
+        name = name.trim();
+
+        var price = parsePrice(priceEl.textContent);
+        if (!price) return;
+
+        var id = slug(sec.id + '-' + sub + '-' + name + '-' + desc);
+        items[id] = {
+          name: node.dataset.cart || name,   // самодостаточное имя для корзины
+          desc: desc,
+          unit: unitEl ? unitEl.textContent.trim() : '',
+          price: price,
+          section: secName,
+          sub: sub,
+          el: node
+        };
+        node.appendChild(buildCtrl(id));
+      });
+    });
+  }
+
+  function buildCtrl(id) {
+    var wrap = document.createElement('div');
+    wrap.className = 'qty-ctrl empty';
+    wrap.dataset.id = id;
+    wrap.innerHTML =
+      '<button class="qty-btn qty-minus" aria-label="Убрать">−</button>' +
+      '<span class="qty-val">0</span>' +
+      '<button class="qty-btn qty-plus" aria-label="Добавить">+</button>';
+    wrap.querySelector('.qty-minus').onclick = function () { change(id, -1); };
+    wrap.querySelector('.qty-plus').onclick  = function () { change(id, +1); };
+    items[id].ctrl = wrap;
+    return wrap;
+  }
+
+  /* ── состояние ── */
+  function change(id, delta) {
+    var q = (cart[id] || 0) + delta;
+    if (q <= 0) delete cart[id]; else cart[id] = q;
+    save();
+    render();
+    if (delta > 0) bump();
+  }
+
+  function setQty(id, q) {
+    if (q <= 0) delete cart[id]; else cart[id] = q;
+    save();
+    render();
+  }
+
+  function totals() {
+    var count = 0, sum = 0, lines = 0;
+    for (var id in cart) {
+      if (!items[id]) continue;
+      lines += 1;
+      count += cart[id];
+      sum   += cart[id] * items[id].price;
+    }
+    return { count: count, lines: lines, sum: sum };
+  }
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(cart)); } catch (e) {}
+  }
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return;
+      var saved = JSON.parse(raw);
+      for (var id in saved) {
+        if (items[id] && saved[id] > 0) cart[id] = saved[id];
+      }
+    } catch (e) { cart = {}; }
+  }
+
+  /* ── отрисовка ── */
+  function render() {
+    for (var id in items) {
+      var q = cart[id] || 0;
+      var c = items[id].ctrl;
+      c.querySelector('.qty-val').textContent = q;
+      c.classList.toggle('empty', q === 0);
+      items[id].el.classList.toggle('in-cart', q > 0);
+    }
+
+    var t = totals();
+
+    document.getElementById('cartBar').classList.toggle('show', t.lines > 0);
+    document.body.classList.toggle('has-cart', t.lines > 0);
+    document.getElementById('barCount').textContent = t.lines ? '· ' + plural(t.lines) : '';
+    document.getElementById('barSum').textContent = fmt(t.sum);
+    document.getElementById('cartTotal').textContent = fmt(t.sum);
+
+    var body = document.getElementById('cartBody');
+    var foot = document.getElementById('cartFoot');
+    body.innerHTML = '';
+
+    if (t.lines === 0) {
+      body.innerHTML = '<div class="cart-empty">Корзина пуста<br>Выберите блюда из меню</div>';
+      foot.style.display = 'none';
+      close();
+      return;
+    }
+    foot.style.display = '';
+
+    for (var id in cart) {
+      var it = items[id];
+      if (!it) continue;
+      var q = cart[id];
+
+      var row = document.createElement('div');
+      row.className = 'cart-item';
+
+      var meta = [];
+      if (it.unit) meta.push(it.unit);
+      meta.push(q + ' × ' + fmt(it.price));
+
+      row.innerHTML =
+        '<div class="cart-item-main">' +
+          '<div class="cart-item-name">' + it.name + '</div>' +
+          '<div class="cart-item-meta">' + meta.join(' · ') + '</div>' +
+        '</div>' +
+        '<div class="cart-item-right">' +
+          '<span class="cart-item-sum">' + fmt(q * it.price) + '</span>' +
+          '<div class="cart-item-ctrl">' +
+            '<button class="qty-btn qty-minus" data-act="minus">−</button>' +
+            '<span class="qty-val">' + q + '</span>' +
+            '<button class="qty-btn qty-plus" data-act="plus">+</button>' +
+            '<button class="cart-item-del" title="Удалить">×</button>' +
+          '</div>' +
+        '</div>';
+
+      (function (id) {
+        row.querySelector('[data-act="minus"]').onclick = function () { change(id, -1); };
+        row.querySelector('[data-act="plus"]').onclick  = function () { change(id, +1); };
+        row.querySelector('.cart-item-del').onclick     = function () { setQty(id, 0); };
+      })(id);
+
+      body.appendChild(row);
+    }
+  }
+
+  function bump() {
+    var bar = document.getElementById('cartBar');
+    bar.classList.remove('bump');
+    void bar.offsetWidth;
+    bar.classList.add('bump');
+  }
+
+  /* ── панель ── */
+  function open() {
+    document.getElementById('cartDrawer').classList.add('open');
+    document.getElementById('cartOverlay').classList.add('open');
+  }
+  function close() {
+    document.getElementById('cartDrawer').classList.remove('open');
+    document.getElementById('cartOverlay').classList.remove('open');
+  }
+
+  function clear() {
+    if (totals().lines === 0) return;
+    if (!confirm('Очистить корзину?')) return;
+    cart = {};
+    save();
+    render();
+  }
+
+  /* ── отправка ── */
+  function send() {
+    var t = totals();
+    if (t.lines === 0) { alert('Корзина пуста — выберите блюда из меню'); return; }
+
+    var lines = ['Здравствуйте! Хочу оформить заказ:', ''];
+    var n = 1;
+    for (var id in cart) {
+      var it = items[id];
+      if (!it) continue;
+      var q = cart[id];
+      lines.push(
+        n++ + '. ' + it.name +
+        (it.unit ? ' — ' + it.unit : '') +
+        ' — ' + q + ' × ' + fmt(it.price) + ' = ' + fmt(q * it.price)
+      );
+    }
+    lines.push('', 'Итого: ' + fmt(t.sum), '');
+
+    var name  = document.getElementById('fName').value.trim();
+    var phone = document.getElementById('fPhone').value.trim();
+    var date  = document.getElementById('fDate').value;
+    var note  = document.getElementById('fNote').value.trim();
+
+    if (name)  lines.push('Имя: ' + name);
+    if (phone) lines.push('Телефон: ' + phone);
+    if (date) {
+      var p = date.split('-');
+      lines.push('Дата: ' + p[2] + '.' + p[1] + '.' + p[0]);
+    }
+    if (note) lines.push('Комментарий: ' + note);
+
+    window.open('https://wa.me/' + PHONE + '?text=' + encodeURIComponent(lines.join('\n')), '_blank');
+  }
+
+  /* ── старт ── */
+  document.addEventListener('DOMContentLoaded', function () {
+    collect();
+    load();
+    render();
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') close();
+    });
+  });
+
+  return { open: open, close: close, clear: clear, send: send };
+})();
 </script>
 
 </body>
